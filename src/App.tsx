@@ -1,7 +1,10 @@
+import "./App.scss";
+import data from "./card.json";
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header"></header>
+    <div className="">
+      <div className=""></div>
     </div>
   );
 }
