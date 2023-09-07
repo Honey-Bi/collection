@@ -57,10 +57,6 @@ function App() {
     };
   });
 
-  // useEffect(() => {
-  //   console.log(active);
-  // }, [active]);
-
   function chagngeActive(index: number) {
     if (index === 0 || index === data.length - 1) return;
     setActive(index - 1);
