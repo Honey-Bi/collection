@@ -129,18 +129,19 @@ function App() {
 
   // 스크롤 함수
   function rotateWheel(e: React.WheelEvent) {
-    if (e.deltaY > 0)
-      // wheel down
-      activeNext();
-    else if (e.deltaY < 0)
-      // wheel up
-      activePrev();
+    // wheel down
+    if (e.deltaY > 0) activeNext();
+    // wheel up
+    else if (e.deltaY < 0) activePrev();
   }
 
   return (
-    <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
-      {result}
-    </div>
+    <>
+      <div className="project-title">title</div>
+      <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
+        {result}
+      </div>
+    </>
   );
 }
 
