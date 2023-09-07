@@ -1,1 +1,132 @@
 $text-color: #343a40;
+$sub-text-color: #4c4f52;
+$album-size: 18rem;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom left, #fff3da, #dfccfb, #d0bfff, #beadfa);
+}
+.card-list {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  @include flex-center();
+  transform-origin: center bottom;
+}
+.card {
+  width: 20rem;
+  height: 30rem;
+  position: absolute;
+  border-radius: 0.25rem;
+  background-color: white;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  padding: 1rem;
+  box-sizing: border-box;
+  opacity: 0;
+  color: $text-color;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  &.active {
+    opacity: 0.4;
+    & + .card {
+      opacity: 1;
+      cursor: default;
+      & + .card {
+        opacity: 0.4;
+      }
+    }
+  }
+  &:first-of-type,
+  &:last-of-type {
+    cursor: default;
+    opacity: 0 !important;
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    .album {
+      width: $album-size;
+      height: $album-size;
+      @include flex-center();
+      .record {
+        width: 70%;
+        height: 70%;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        border: 5px solid white;
+        box-sizing: border-box;
+        @include flex-center();
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
+          rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+        .innerRound {
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 2rem;
+          background-color: white;
+          position: relative;
+          @include flex-center();
+          box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+            rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+          &::after {
+            content: "";
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem;
+            position: absolute;
+            border: 2px solid white;
+            border-radius: 50%;
+          }
+        }
+        transition: scale 0.2s ease, rotate 0.4s cubic-bezier(0.17, 0.67, 0.38, 0.94);
+        &:hover {
+          scale: 1.1;
+          rotate: 360deg;
+        }
+      }
+    }
+    .title {
+      font-weight: 600;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .date {
+      color: $sub-text-color;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+    .control {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        svg {
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+        &:active {
+          svg:not(.roll) {
+            fill: rgba(0, 0, 0, 0.5);
+          }
+          svg.roll {
+            stroke: rgba(0, 0, 0, 0.5);
+          }
+        }
+      }
+    }
+  }
+}
