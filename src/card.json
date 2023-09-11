@@ -1,32 +1,27 @@
 [
-  {
-    "title": "",
-    "date": "",
-    "img": "",
-    "url": ""
-  },
+  {},
   {
     "title": "plant-tree",
     "date": "2023 July",
-    "img": "sample_images_01.png",
-    "url": "https://honey-bi.github.io/plant-tree-app/"
+    "img": "plant-tree.png",
+    "url": "https://honey-bi.github.io/plant-tree-app/",
+    "type": "Canvas Element",
+    "color": "#b5f1cc"
   },
   {
     "title": "milky-way",
     "date": "2023 September",
-    "img": "sample_images_02.png",
-    "url": "https://honey-bi.github.io/milky-way/"
+    "img": "milky-way3.png",
+    "url": "https://honey-bi.github.io/milky-way/",
+    "type": "Canvas Element",
+    "color": "#000000"
   },
   {
     "title": "waterfall-typography",
     "date": "2023 September",
-    "img": "sample_images_02.png",
-    "url": "https://honey-bi.github.io/waterfall-typography/"
-  },
-  {
-    "title": "",
-    "date": "",
-    "img": "",
-    "url": ""
+    "img": "waterfall.png",
+    "url": "https://honey-bi.github.io/waterfall-typography/",
+    "type": "Canvas Element",
+    "color": "#08d9d6"
   }
 ]
