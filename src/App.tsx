@@ -51,7 +51,7 @@ function App() {
     }
   };
 
-  function chagngeActive(index: number) {
+  function changeActive(index: number) {
     if (index === 0) return;
     setActive(index - 1);
   }
@@ -137,7 +137,7 @@ function App() {
           transform: `rotate(${(i - active) * 45 - 45}deg)`,
           display: `${Math.abs(active - i) < 4 ? "flex" : "none"}`,
         }}
-        onClick={() => chagngeActive(i)}
+        onClick={() => changeActive(i)}
       >
         {album}
       </div>
@@ -152,12 +152,38 @@ function App() {
     else if (e.deltaY < 0) activePrev();
   }
 
+  const createCardItem = (index: number) => {
+    const cardData = data[index];
+    if (!cardData) return null; // 데이터가 없으면 null 반환
+    // 카드 스타일을 동적으로 설정
+    const cardStyle = {
+      transformOrigin: `center ${size.height / 2 + 500}px`,
+      transform: `rotate(${(index - active) * 45 - 45}deg)`,
+      display: `${Math.abs(active - index) < 4 ? "flex" : "none"}`,
+    };
+
+    // 카드 배경 스타일 설정
+    const cardBackground = cardData.img
+      ? { backgroundImage: `url(${require("./img/" + cardData.img)})` }
+      : { backgroundColor: cardData.color };
+
+    // 카드 쉐도우 스타일 설정
+    const rgba = hex2rgba(cardData.color!, 0.3);
+    const shadowStyle = {
+      boxShadow: `${rgba} 0px 8px 24px, ${rgba} 0px 16px 56px, ${rgba} 0px 24px 80px`,
+    };
+    return (
+
+    );
+  };
+
   return (
     <>
       <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
-        {result}
+        {data.map((_, index) => createCardItem(index))}
+        {/* {result} */}
       </div>
-      <div className="project-title">111</div>
+      <div className="project-title">title</div>
       <div className="project-info">
         a <br /> collection of
         <br /> interactive <br />
