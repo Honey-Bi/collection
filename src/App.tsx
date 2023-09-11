@@ -9,7 +9,7 @@ function App() {
   const [active, setActive] = useState<number>(0);
 
   function activeNext() {
-    if (active < data.length - 3) setActive((prev) => prev + 1);
+    if (active < data.length - 2) setActive((prev) => prev + 1);
   }
   function activePrev() {
     if (active > 0) setActive((prev) => prev - 1);
@@ -29,10 +29,12 @@ function App() {
   };
 
   useEffect(() => {
-    // 화면 resize 처리
+    // 화면 resize 처리 및 키입력 처리
     window.addEventListener("resize", handleResize);
+    window.addEventListener("keydown", handleKeyPress);
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   });
 
@@ -49,40 +51,55 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    // 화면 resize 처리
-    window.addEventListener("keydown", handleKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  });
-
   function chagngeActive(index: number) {
-    if (index === 0 || index === data.length - 1) return;
+    if (index === 0) return;
     setActive(index - 1);
+  }
+
+  function hex2rgba(hex: string, a: number): string {
+    hex = hex.replace(/^#/, "");
+
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r},${g},${b},${a})`;
   }
 
   let result = [];
   for (let i = 0; i < data.length; i++) {
     let album = [];
-    if (!(i === 0 || i === data.length - 1)) {
+    if (Object.keys(data[i]).length > 0) {
+      const rgba = hex2rgba(data[i].color!, 0.3);
+      let background;
+      if (data[i].img)
+        background = { backgroundImage: `url(${require("./img/" + data[i].img)})` };
+      else background = { backgroundColor: data[i].color };
+
       album.push(
         <div className="info" key={i}>
           <div className="album">
             <a
+              className={`record ${active + 1 === i ? "" : "disable"}`}
+              style={background}
               href={data[i].url}
               target="_blank"
               rel="noreferrer"
-              className="record"
-              style={{
-                backgroundImage: `url(${require("./img/" + data[i].img)})`,
-              }}
             >
-              <div className="innerRound" />
+              <div className="innerRound" style={{ backgroundColor: data[i].color }} />
             </a>
+            <div
+              className="shadow"
+              style={{
+                boxShadow: `${rgba} 0px 8px 24px, ${rgba} 0px 16px 56px, ${rgba} 0px 24px 80px`,
+              }}
+            />
           </div>
-          <div className="title">{data[i].title}</div>
-          <div className="date">{data[i].date}</div>
+          <div className="data-info">
+            <div className="title">{data[i].title}</div>
+            <div className="type">{data[i].type}</div>
+            <div className="date">{data[i].date}</div>
+          </div>
           <div className="control">
             <button>
               <svg viewBox="0 0 32 32" width="32px">
@@ -118,7 +135,7 @@ function App() {
         style={{
           transformOrigin: `center ${size.height / 2 + 500}px`,
           transform: `rotate(${(i - active) * 45 - 45}deg)`,
-          display: `${Math.abs(active - i) < 5 ? "flex" : "none"}`,
+          display: `${Math.abs(active - i) < 4 ? "flex" : "none"}`,
         }}
         onClick={() => chagngeActive(i)}
       >
@@ -137,9 +154,14 @@ function App() {
 
   return (
     <>
-      <div className="project-title">title</div>
       <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
         {result}
+      </div>
+      <div className="project-title">111</div>
+      <div className="project-info">
+        a <br /> collection of
+        <br /> interactive <br />
+        html 5<br /> experience
       </div>
     </>
   );

@@ -19,12 +19,15 @@ body {
   width: 100%;
   height: 100%;
   position: fixed;
-  @include flex-center();
+  @include flex-center;
   transform-origin: center bottom;
 }
 .card {
   width: 20rem;
-  height: 30rem;
+  max-height: 30rem;
+  height: 75%;
+  min-height: 28rem;
+
   position: absolute;
   border-radius: 0.25rem;
   background-color: white;
@@ -46,8 +49,7 @@ body {
       }
     }
   }
-  &:first-of-type,
-  &:last-of-type {
+  &:first-of-type {
     cursor: default;
     opacity: 0 !important;
   }
@@ -55,56 +57,87 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    @mixin album {
+      width: 70%;
+      height: 70%;
+      border-radius: 50%;
+    }
     .album {
       width: $album-size;
       height: $album-size;
-      @include flex-center();
+      position: relative;
+      @include flex-center;
       .record {
-        width: 70%;
-        height: 70%;
-        border-radius: 50%;
+        @include album;
         background-size: cover;
         background-position: center;
         border: 5px solid white;
         box-sizing: border-box;
-        @include flex-center();
-        box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
-          rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+        @include flex-center;
+        &.disable {
+          pointer-events: none;
+        }
         .innerRound {
           width: 2.5rem;
           height: 2.5rem;
           border-radius: 2rem;
-          background-color: white;
+          padding: 0.5rem;
+          border: 2px solid white;
           position: relative;
-          @include flex-center();
-          box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
-            rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+          @include flex-center;
           &::after {
             content: "";
-            width: 100%;
-            height: 100%;
-            padding: 0.5rem;
+            width: calc(100% - 1rem);
+            height: calc(100% - 1rem);
             position: absolute;
-            border: 2px solid white;
+            background-color: white;
             border-radius: 50%;
+            box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+              rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+            transition: rotate 0.4s cubic-bezier(0.17, 0.67, 0.38, 0.94);
           }
         }
         transition: scale 0.2s ease, rotate 0.4s cubic-bezier(0.17, 0.67, 0.38, 0.94);
         &:hover {
           scale: 1.1;
           rotate: 360deg;
+          .innerRound::after {
+            rotate: -360deg;
+          }
+          & + .shadow {
+            scale: 1.1;
+          }
         }
       }
+
+      .shadow {
+        @include album;
+        z-index: -1;
+        position: absolute;
+        transition: scale 0.2s ease;
+        // box-shadow: rgba(181, 241, 204, 0.1) 0px 8px 24px,
+        //   rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+      }
     }
-    .title {
-      font-weight: 600;
-      text-align: center;
-      font-size: 1.2rem;
-    }
-    .date {
-      color: $sub-text-color;
-      text-align: center;
-      font-size: 0.8rem;
+    .data-info {
+      .title {
+        font-weight: 600;
+        text-align: center;
+        font-size: 1.2rem;
+        &::first-letter {
+          text-transform: uppercase;
+        }
+      }
+      .type {
+        color: $sub-text-color;
+        text-align: center;
+        font-size: 0.8rem;
+      }
+      .date {
+        color: $sub-text-color;
+        text-align: center;
+        font-size: 0.7rem;
+      }
     }
     .control {
       width: 100%;
@@ -130,12 +163,56 @@ body {
     }
   }
 }
-.project-title {
+@mixin project {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
-  text-transform: uppercase;
-  font-size: 2rem;
-  font-weight: 800;
+  cursor: default;
   color: white;
+  font-weight: 800;
+}
+.project-info {
+  @include project;
+  right: 1rem;
+  bottom: 1rem;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+// @mixin move-btn($np) {
+//   $button-size: 8rem;
+//   position: fixed;
+//   width: $button-size;
+//   height: $button-size;
+//   background-color: rgba($color: #000000, $alpha: 0.2);
+//   top: 50%;
+//   transform: translate(if($np, $button-size/2, -$button-size/2), -50%) rotate(45deg);
+// }
+// .next {
+//   @include move-btn(true);
+//   right: 0;
+//   &::before {
+//     position: absolute;
+//     bottom: 0;
+//     content: "\e080";
+//   }
+// }
+// .prev {
+//   @include move-btn(false);
+//   left: 0;
+//   &::before {
+//     position: absolute;
+//     right: 0;
+//     content: "\e079";
+//   }
+// }
+@media (max-width: 616px) {
+  .project-info {
+    display: none;
+  }
+}
+.project-title {
+  @include project;
+  left: 0;
+  right: 0;
+  top: 1rem;
+  text-align: center;
+  font-size: 2rem;
 }
