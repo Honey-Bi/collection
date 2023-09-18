@@ -23,8 +23,8 @@ function App() {
   const handleResize = () => {
     // 화면 resize 크기 저장
     setSize({
-      width: document.body.clientWidth,
-      height: document.body.clientHeight,
+      width: window.innerWidth,
+      height: window.innerHeight,
     });
   };
 
@@ -57,7 +57,7 @@ function App() {
   }
 
   function hex2rgba(hex: string, a: number): string {
-    hex = hex.replace(/^#/, "");
+    hex = hex.replace(/^#/, " "); // # 제거
 
     const bigint = parseInt(hex, 16);
     const r = (bigint >> 16) & 255;
@@ -66,27 +66,60 @@ function App() {
     return `rgba(${r},${g},${b},${a})`;
   }
 
-  let result = [];
-  for (let i = 0; i < data.length; i++) {
-    let album = [];
-    if (Object.keys(data[i]).length > 0) {
-      const rgba = hex2rgba(data[i].color!, 0.3);
-      let background;
-      if (data[i].img)
-        background = { backgroundImage: `url(${require("./img/" + data[i].img)})` };
-      else background = { backgroundColor: data[i].color };
+  // 스크롤 함수
+  function rotateWheel(e: React.WheelEvent) {
+    // wheel down
+    if (e.deltaY > 0) activeNext();
+    // wheel up
+    else if (e.deltaY < 0) activePrev();
+  }
 
-      album.push(
-        <div className="info" key={i}>
+  const createCardItem = (index: number) => {
+    const cardData = data[index];
+    // 카드 스타일을 동적으로 설정
+    const cardStyle = {
+      transformOrigin: `center ${size.height / 2 + 500}px`,
+      transform: `rotate(${(index - active) * 45 - 45}deg)`,
+      display: `${Math.abs(active - index) < 4 ? "flex" : "none"}`,
+    };
+    if (index === 0) {
+      return (
+        <div
+          className={`card ${active === index ? "active" : ""}`}
+          style={cardStyle}
+          key={index}
+        />
+      );
+      // 첫번째 카드는 빈카드
+    }
+
+    // 카드 배경 스타일 설정
+    const cardBackground = cardData.img
+      ? { backgroundImage: `url(${require("./img/" + cardData.img)})` }
+      : { backgroundColor: cardData.color };
+
+    // 카드 쉐도우 스타일 설정
+    const rgba = hex2rgba(cardData.color!, 0.3);
+    return (
+      <div
+        className={`card ${active === index ? "active" : ""}`}
+        style={cardStyle}
+        key={index}
+        onClick={() => changeActive(index)}
+      >
+        <div className="info">
           <div className="album">
             <a
-              className={`record ${active + 1 === i ? "" : "disable"}`}
-              style={background}
-              href={data[i].url}
+              className={`record ${active === index ? "" : "disable"}`}
+              style={cardBackground}
+              href={cardData.url}
               target="_blank"
               rel="noreferrer"
             >
-              <div className="innerRound" style={{ backgroundColor: data[i].color }} />
+              <div
+                className="innerRound"
+                style={{ backgroundColor: cardData.color }}
+              />
             </a>
             <div
               className="shadow"
@@ -96,9 +129,9 @@ function App() {
             />
           </div>
           <div className="data-info">
-            <div className="title">{data[i].title}</div>
-            <div className="type">{data[i].type}</div>
-            <div className="date">{data[i].date}</div>
+            <div className="title">{cardData.title}</div>
+            <div className="type">{cardData.type}</div>
+            <div className="date">{cardData.date}</div>
           </div>
           <div className="control">
             <button>
@@ -126,54 +159,7 @@ function App() {
             </button>
           </div>
         </div>
-      );
-    }
-    result.push(
-      <div
-        key={i}
-        className={`card ${active === i ? "active" : ""}`}
-        style={{
-          transformOrigin: `center ${size.height / 2 + 500}px`,
-          transform: `rotate(${(i - active) * 45 - 45}deg)`,
-          display: `${Math.abs(active - i) < 4 ? "flex" : "none"}`,
-        }}
-        onClick={() => changeActive(i)}
-      >
-        {album}
       </div>
-    );
-  }
-
-  // 스크롤 함수
-  function rotateWheel(e: React.WheelEvent) {
-    // wheel down
-    if (e.deltaY > 0) activeNext();
-    // wheel up
-    else if (e.deltaY < 0) activePrev();
-  }
-
-  const createCardItem = (index: number) => {
-    const cardData = data[index];
-    if (!cardData) return null; // 데이터가 없으면 null 반환
-    // 카드 스타일을 동적으로 설정
-    const cardStyle = {
-      transformOrigin: `center ${size.height / 2 + 500}px`,
-      transform: `rotate(${(index - active) * 45 - 45}deg)`,
-      display: `${Math.abs(active - index) < 4 ? "flex" : "none"}`,
-    };
-
-    // 카드 배경 스타일 설정
-    const cardBackground = cardData.img
-      ? { backgroundImage: `url(${require("./img/" + cardData.img)})` }
-      : { backgroundColor: cardData.color };
-
-    // 카드 쉐도우 스타일 설정
-    const rgba = hex2rgba(cardData.color!, 0.3);
-    const shadowStyle = {
-      boxShadow: `${rgba} 0px 8px 24px, ${rgba} 0px 16px 56px, ${rgba} 0px 24px 80px`,
-    };
-    return (
-
     );
   };
 
@@ -181,7 +167,6 @@ function App() {
     <>
       <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
         {data.map((_, index) => createCardItem(index))}
-        {/* {result} */}
       </div>
       <div className="project-title">title</div>
       <div className="project-info">
