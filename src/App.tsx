@@ -110,7 +110,7 @@ function App() {
         <div className="info">
           <div className="album">
             <a
-              className={`record ${active === index ? "" : "disable"}`}
+              className={`record ${active + 1 === index ? "" : "disable"}`}
               style={cardBackground}
               href={cardData.url}
               target="_blank"
@@ -168,7 +168,7 @@ function App() {
       <div className="card-list" ref={cardsRef} onWheel={rotateWheel}>
         {data.map((_, index) => createCardItem(index))}
       </div>
-      <div className="project-title">title</div>
+      <div className="project-title">HB</div>
       <div className="project-info">
         a <br /> collection of
         <br /> interactive <br />
