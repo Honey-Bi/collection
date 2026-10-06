@@ -2,6 +2,8 @@ import "./App.scss";
 import data from "./card.json";
 import React, { useEffect, useState, useRef } from "react";
 
+const cardImages = import.meta.glob<string>("./img/**/*.{png,jpg,jpeg,gif,webp,svg,bmp,ico}", { eager: true, query: "?url", import: "default" });
+
 function App() {
   type Size = { width: number; height: number };
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
@@ -95,7 +97,7 @@ function App() {
 
     // 카드 배경 스타일 설정
     const cardBackground = cardData.img
-      ? { backgroundImage: `url(${require("./img/" + cardData.img)})` }
+      ? { backgroundImage: `url(${cardImages["./img/" + cardData.img]})` }
       : { backgroundColor: cardData.color };
 
     // 카드 쉐도우 스타일 설정
@@ -179,3 +181,4 @@ function App() {
 }
 
 export default App;
+
